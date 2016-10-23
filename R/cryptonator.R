@@ -50,7 +50,7 @@ Cryptonator.currencies <- function() {
 #' }
 #' @export
 Cryptonator.simple <- function(ticker="btc-usd") {
-  ticker <- sub("/", "-", ticker)
+  ticker <- sub("/", "-", tolower(ticker))
   if (length(ticker) > 1) {
     L <- lapply(ticker, Cryptonator.simple)
     return(do.call(rbind, L))
@@ -88,19 +88,23 @@ Cryptonator.simple <- function(ticker="btc-usd") {
 #' }
 #' @export
 Cryptonator.complete <- function(ticker="btc-usd") {
-  ticker <- sub("/", "-", ticker)
+  ticker <- sub("/", "-", tolower(ticker))
   base.url <- "https://api.cryptonator.com/api/full/"
   uri <- paste0(base.url, ticker)
-  json <- getURL(uri)
-  res <- jsonlite::fromJSON(json)
-
-  if (!res$success) return(res$error)
-
-  timestamp <- as.POSIXct(res$timestamp, origin=as.Date("1970-01-01"))
-
-  smry <- as.data.frame(c(ticker=ticker, head(res$ticker, -1), list(timestamp=timestamp)))
-  dat <- res$ticker$markets
-  list(summary=smry, detail=dat[order(dat$volume, decreasing=TRUE),])
+  
+  L <- setNames(lapply(uri, function(u) {
+    json <- getURL(u)
+    res <- jsonlite::fromJSON(json)
+    if (!res$success) {
+      res$error
+    } else res
+    timestamp <- as.POSIXct(res$timestamp, origin=as.Date("1970-01-01"))
+    
+    smry <- as.data.frame(c(ticker=ticker, head(res$ticker, -1), list(timestamp=timestamp)))
+    dat <- res$ticker$markets
+    list(summary=smry, detail=dat[order(dat$volume, decreasing=TRUE),])
+  }), ticker)
+  L
 }
 
 

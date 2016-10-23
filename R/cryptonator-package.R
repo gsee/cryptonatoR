@@ -26,6 +26,7 @@
 NULL
 
 #' @importFrom utils head
+#' @importFrom stats setNames
 #' @importFrom jsonlite fromJSON
 #' @importFrom RCurl getURL
 NULL
