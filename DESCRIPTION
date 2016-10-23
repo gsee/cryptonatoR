@@ -1,0 +1,17 @@
+Package: cryptonatoR
+Type: Package
+Title: An R API to the cryptonator REST API
+Version: 0.0.0.9000
+Authors@R: person("Garrett", "See", email="gsee000@gmail.com",
+    role=c("aut", "cre"))
+Description: cryptonatoR provides an R API to the cryptonator.com REST API.
+    Visit \url{https://www.cryptonator.com/api} for more detail about the
+    service.
+Imports:
+    RCurl,
+    jsonlite
+Suggests:
+    roxygen2
+License: file LICENSE
+LazyData: TRUE
+RoxygenNote: 5.0.0
