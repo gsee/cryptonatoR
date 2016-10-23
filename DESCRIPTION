@@ -1,7 +1,7 @@
 Package: cryptonatoR
 Type: Package
 Title: An R API to the cryptonator REST API
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Authors@R: person("Garrett", "See", email="gsee000@gmail.com",
     role=c("aut", "cre"))
 Description: cryptonatoR provides an R API to the cryptonator.com REST API.
