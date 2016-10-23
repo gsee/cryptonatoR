@@ -3,6 +3,7 @@
 export(Cryptonator.complete)
 export(Cryptonator.currencies)
 export(Cryptonator.simple)
+export(getQuote.cryptonator)
 importFrom(RCurl,getURL)
 importFrom(jsonlite,fromJSON)
 importFrom(utils,head)

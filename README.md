@@ -18,6 +18,11 @@ Example usage:
 Cryptonator.currencies()
 Cryptonator.simple("btc-usd")
 Cryptonator.complete("btc-usd")
+
+#includes a getQuote "method"
+library(quantmod)
+getQuote("XMR-BTC", src="cryptonator")
+getQuote("XMR-BTC", src="cryptonator", what="complete")
 ````
   
 <a href="http://www.wtfpl.net/"><img

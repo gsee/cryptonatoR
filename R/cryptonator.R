@@ -50,6 +50,7 @@ Cryptonator.currencies <- function() {
 #' }
 #' @export
 Cryptonator.simple <- function(ticker="btc-usd") {
+  ticker <- sub("/", "-", ticker)
   if (length(ticker) > 1) {
     L <- lapply(ticker, Cryptonator.simple)
     return(do.call(rbind, L))
@@ -87,7 +88,7 @@ Cryptonator.simple <- function(ticker="btc-usd") {
 #' }
 #' @export
 Cryptonator.complete <- function(ticker="btc-usd") {
-
+  ticker <- sub("/", "-", ticker)
   base.url <- "https://api.cryptonator.com/api/full/"
   uri <- paste0(base.url, ticker)
   json <- getURL(uri)
@@ -100,4 +101,34 @@ Cryptonator.complete <- function(ticker="btc-usd") {
   smry <- as.data.frame(c(ticker=ticker, head(res$ticker, -1), list(timestamp=timestamp)))
   dat <- res$ticker$markets
   list(summary=smry, detail=dat[order(dat$volume, decreasing=TRUE),])
+}
+
+
+#' getQuote.cryptonator
+#' 
+#' a "method" for \code{quantmod::getQuote}
+#' 
+#' This is simply a wrapper around \code{\link{Cryptonator.simple}} or 
+#'  \code{\link{Cryptonator.complete}} to allow calling \code{quantmod::getQuote}
+#'  with \code{src="cryptonator"}
+#' 
+#' @param Symbols a ticker or vector of tickers (only supported for 
+#'  what="simple"). Tickers are hyphen-separated currency pairs (e.g. "btc-usd")
+#' @param what either "simple" or "complete" depending on whether you want to 
+#'  get back a summary or details for all exchanges.
+#' @return see \code{\link{Cryptonator.simple}} or \code{\link{Cryptonator.complete}}
+#' @author gsee
+#' @examples 
+#' \dontrun{
+#' library(quantmod)
+#' getQuote("XMR-BTC", src="cryptonator")
+#' }
+#' @export
+getQuote.cryptonator <- function(Symbols, what=c("simple", "complete")) {
+  what <- tolower(what)
+  what <- match.arg(what)
+  if (length(Symbols) > 1L & what=="complete") {
+    stop('must use what="simple" when supplying more than one ticker.')
+  }
+  do.call(paste("Cryptonator", what, sep="."), list(ticker=Symbols))
 }
