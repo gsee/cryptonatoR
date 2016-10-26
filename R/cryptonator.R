@@ -64,7 +64,11 @@ Cryptonator.simple <- function(ticker="btc-usd") {
   if (!res$success) return(res$error)
 
   timestamp <- as.POSIXct(res$timestamp, origin=as.Date("1970-01-01"))
-  as.data.frame(c(ticker=ticker, res$ticker, list(timestamp=timestamp)))
+  out <- as.data.frame(c(ticker=ticker, res$ticker, list(timestamp=timestamp)), 
+                       stringsAsFactors=FALSE)
+  out[c("price", "volume", "change")] <- lapply(out[c("price", "volume", 
+                                                      "change")], as.numeric)
+  out
 }
 
 
@@ -100,8 +104,12 @@ Cryptonator.complete <- function(ticker="btc-usd") {
     } else res
     timestamp <- as.POSIXct(res$timestamp, origin=as.Date("1970-01-01"))
     
-    smry <- as.data.frame(c(ticker=ticker, head(res$ticker, -1), list(timestamp=timestamp)))
+    smry <- as.data.frame(c(ticker=ticker, head(res$ticker, -1), 
+                            list(timestamp=timestamp)), stringsAsFactors=FALSE)
+    smry[c("price", "volume", "change")] <- lapply(smry[c("price", "volume", 
+                                                          "change")], as.numeric)
     dat <- res$ticker$markets
+    dat[c("price", "volume")] <- lapply(dat[c("price", "volume")], as.numeric)
     list(summary=smry, detail=dat[order(dat$volume, decreasing=TRUE),])
   }), ticker)
   L
