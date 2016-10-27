@@ -139,8 +139,5 @@ Cryptonator.complete <- function(ticker="btc-usd") {
 getQuote.cryptonator <- function(Symbols, what=c("simple", "complete")) {
   what <- tolower(what)
   what <- match.arg(what)
-  if (length(Symbols) > 1L & what=="complete") {
-    stop('must use what="simple" when supplying more than one ticker.')
-  }
   do.call(paste("Cryptonator", what, sep="."), list(ticker=Symbols))
 }
